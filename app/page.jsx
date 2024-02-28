@@ -1,23 +1,22 @@
-import TextCenter from '@/components/TextCenter'
-import CallToActionButton from '@/components/CallToActionButton'
-import SplitImageLeft from '@/components/SplitImageLeft'
-import SplitButtonLeft from '@/components/SplitButtonLeft'
-import Hero from '@/components/Hero'
+import { SliceZone } from "@prismicio/react";
+import { createClient } from "@/prismicio";
+import { components } from "@/slices";
 
-export const metadata = {
-  title: 'EIE - Engineering Intelligent Environments',
-  description:
-    'Farming solutions start-up that aims to revolutionize the way farmers work.',
-}
+export default async function Page() {
+  const client = createClient();
+  const page = await client.getSingle("homepage");
 
-export default function Home() {
-  return (
-    <main>
-      <Hero />
-      <CallToActionButton />
-      <SplitImageLeft />
-      <SplitButtonLeft />
-      <TextCenter />
-    </main>
-  )
+  return (<div>
+   <SliceZone slices={page.data.slices} components={components} />; 
+  </div>
+)}
+
+export async function generateMetadata() {
+  const client = createClient();
+  const page = await client.getSingle("homepage");
+
+  return {
+    title: page.data.meta_title,
+    description: page.data.meta_description,
+  };
 }
